@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -15,16 +16,11 @@ public class ReservationRequest {
 
     private Integer id;
 
-    private Integer userId;
+    private String clientFullName;
 
     private Integer roomNumber;
 
-    private LocalDate bookedDate;
+    private List<LocalDate> reservationDates;
 
-    private LocalDate fromDate;
-
-    private LocalDate toDate;
-
-    private LocalDate updatedDate;
 
 }

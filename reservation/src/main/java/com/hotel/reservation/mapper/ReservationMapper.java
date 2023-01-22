@@ -17,8 +17,6 @@ public interface ReservationMapper {
 
     List<ReservationResponse> mapRequests(List<Reservation> reservation);
 
-    @Mapping(target = "userId.id", source = "userId")
-    @Mapping(target = "roomNumber.roomNumber", source = "roomNumber")
     Reservation mapEntity(ReservationRequest reservation);
 
 }

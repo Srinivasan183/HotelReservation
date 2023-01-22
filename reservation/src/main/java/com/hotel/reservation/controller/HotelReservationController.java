@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 @Api(value = "Reservation resources")
 @Slf4j
@@ -36,28 +35,46 @@ public class HotelReservationController {
         return new ResponseEntity<>(reservationResponses, HttpStatus.OK);
     }
 
-    @GetMapping(path ="/{id}" , produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationResponse> getReservationById(@PathVariable Integer id) {
-        Optional<Reservation> reservation = this.reservationService.getReservedRoomById(id);
-        ReservationResponse reservationResponse;
-        if (reservation.isPresent()) {
-            reservationResponse = this.reservationMapper.mapRequest(reservation.get());
-            return new ResponseEntity<>(reservationResponse, HttpStatus.OK);
+        ResponseEntity responseEntity = null;
+        try {
+            Optional<Reservation> reservation = this.reservationService.getReservedRoomById(id);
+            ReservationResponse reservationResponse;
+            if (reservation.isPresent()) {
+                reservationResponse = this.reservationMapper.mapRequest(reservation.get());
+                return new ResponseEntity<>(reservationResponse, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } catch (RuntimeException exception) {
+            responseEntity = ResponseEntity.badRequest().body("Error :: " + exception.getMessage());
         }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        return responseEntity;
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationResponse> reserveHotelRoom(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = this.reservationMapper.mapEntity(reservationRequest);
-        ReservationResponse reservationResponse = this.reservationMapper.mapRequest(this.reservationService.reserveRoom(reservation));
-        return new ResponseEntity<>(reservationResponse, HttpStatus.OK);
+        ResponseEntity responseEntity = null;
+        try {
+            Reservation reservation = this.reservationMapper.mapEntity(reservationRequest);
+            ReservationResponse reservationResponse = this.reservationMapper.mapRequest(this.reservationService.reserveRoom(reservation));
+            return new ResponseEntity<>(reservationResponse, HttpStatus.OK);
+        } catch (RuntimeException exception) {
+            responseEntity = ResponseEntity.badRequest().body("Error :: " + exception.getMessage());
+        }
+        return responseEntity;
     }
 
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationResponse> updateReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = this.reservationMapper.mapEntity(reservationRequest);
-        ReservationResponse reservationResponse = this.reservationMapper.mapRequest(this.reservationService.reserveRoom(reservation));
-        return new ResponseEntity<>(reservationResponse, HttpStatus.OK);
+        ResponseEntity responseEntity = null;
+        try {
+            Reservation reservation = this.reservationMapper.mapEntity(reservationRequest);
+            ReservationResponse reservationResponse = this.reservationMapper.mapRequest(this.reservationService.updateReservedRoom(reservation));
+            return new ResponseEntity<>(reservationResponse, HttpStatus.OK);
+        } catch (RuntimeException exception) {
+            responseEntity = ResponseEntity.badRequest().body("Error :: " + exception.getMessage());
+        }
+        return responseEntity;
     }
 }

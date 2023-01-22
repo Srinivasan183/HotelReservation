@@ -12,4 +12,6 @@ public interface ReservationService {
     Reservation reserveRoom(Reservation reservation);
 
     Optional<Reservation> getReservedRoomById(int reservationId);
+
+    Reservation updateReservedRoom(Reservation reservation);
 }
